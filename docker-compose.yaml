@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  message:
+    build:
+      context: .
+      dockerfile: ./message-service/Dockerfile
+    env_file:
+      - ".env"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+      - MONGO_INITDB_DATABASE=$MONGO_DATABASE
+      - MONGO_DATABASE=$MONGO_DATABASE
+      - MONGO_USERNAME=$MONGO_USERNAME
+      - MONGO_PASSWORD=$MONGO_PASSWORD
+    volumes:
+      - ./.docker/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+    ports:
+      - "27017:27017"
